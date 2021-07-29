@@ -1,0 +1,1158 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 232,
+   "id": "b289a160-1e0d-4e57-bca0-5eeb5be2dd26",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 233,
+   "id": "26d9a65e-179a-4a07-afd1-118766f966bb",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Requirement already satisfied: pandas in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (1.3.0)\n",
+      "Requirement already satisfied: pytz>=2017.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (2021.1)\n",
+      "Requirement already satisfied: numpy>=1.17.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (1.21.0)\n",
+      "Requirement already satisfied: python-dateutil>=2.7.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (2.8.1)\n",
+      "Requirement already satisfied: six>=1.5 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from python-dateutil>=2.7.3->pandas) (1.16.0)\n",
+      "Requirement already satisfied: openpyxl in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (3.0.7)\n",
+      "Requirement already satisfied: et-xmlfile in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from openpyxl) (1.1.0)\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip3 install pandas\n",
+    "!pip3 install openpyxl"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 234,
+   "id": "84ebe62c-c198-425c-8da9-dd439ec1e65e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "filepath = '/Users/thejapamarthy/Downloads/4ALL_METRIC_SCHOOL_REPORTS_2020.xlsx'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 235,
+   "id": "0bd33108-468f-4c45-9887-bfbadf7b818a",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/openpyxl/worksheet/header_footer.py:48: UserWarning: Cannot parse header or footer so it will be ignored\n",
+      "  warn(\"\"\"Cannot parse header or footer so it will be ignored\"\"\")\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array(['Obs', 'DBN', 'Grade\\nBand', 'Mobility\\nRate',\n",
+       "       'Saturation\\nSubscore', 'Equity\\nSubscore', 'Overall\\nScore',\n",
+       "       'Total\\nNumber\\nof\\nStudents', 'Total\\nNumber\\nof CS\\nStudents',\n",
+       "       '% Total Students in CS', 'Number\\nof\\nFemale\\nStudents',\n",
+       "       'Number of Female Students Who Took CS', '% Female Students',\n",
+       "       'Participation\\nRate of\\nFemale\\nStudents\\n(Composition Index)',\n",
+       "       'Proportion of School\\nthat is\\nFemale\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Female\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof Male\\nStudents',\n",
+       "       'Number\\nof Male\\nStudents\\nWho\\nTook CS', '% Male Students',\n",
+       "       'Proportion\\nof School\\nthat is Male\\n(Composition Index)',\n",
+       "       'Participation\\nRate of Male\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Male\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nBlack\\nStudents',\n",
+       "       'Number\\nof Black\\nStudents who\\ntook CS', '% Black Students',\n",
+       "       'Proportion\\nof Students\\nwho are\\nBlack\\n(Composition)',\n",
+       "       'Participation\\nRate of\\nBlack\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Black\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nNon-Black\\nStudents',\n",
+       "       'Number\\nof\\nNon-Black\\nStudents\\nwho took\\nCS',\n",
+       "       '% Non-Black Students',\n",
+       "       'Proportion\\nof Students\\nwho are not\\nBlack\\n(Composition)',\n",
+       "       'Participation\\nRate of\\nNon-Black\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Non-Black\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nLatinx\\nStudents',\n",
+       "       'Number\\nof Latinx\\nStudents\\nwho took CS', '% Latinx\\nStudents',\n",
+       "       'Proportion\\nof Students\\nwho Latinx\\n(Composition Index)',\n",
+       "       'Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number of\\nNon-Latinx\\nStudents',\n",
+       "       'Number of\\nNon-Latinx\\nStudents\\nwho took\\nCS',\n",
+       "       '% Non-Latinx\\nStudents',\n",
+       "       'Proportion\\nof Students who are Non-Latinx\\n(Composition Index)',\n",
+       "       'Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index).1',\n",
+       "       'Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index).1'],\n",
+       "      dtype=object)"
+      ]
+     },
+     "execution_count": 235,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df1 = pd.read_excel(filepath, sheet_name = '4ALL_METRIC_SCHOOL_REPORTS_FIRS')\n",
+    "df1.columns.values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 236,
+   "id": "8c493b0f-4d63-405e-b610-253326653537",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "46\n",
+      "2497\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(len(df1.columns))\n",
+    "print(len(df1))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 237,
+   "id": "2ef0d167-0813-41ac-92b2-21e817a2cd56",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "39\n",
+      "2497\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(len(df2.columns))\n",
+    "print(len(df2))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 238,
+   "id": "7620d68b-5510-4e00-86bb-7d35c3ea6ed2",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "K-2     791\n",
+       "3-5     773\n",
+       "6-8     469\n",
+       "9-12    464\n",
+       "Name: Grade\\nBand, dtype: int64"
+      ]
+     },
+     "execution_count": 238,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df1['Grade\\nBand'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 239,
+   "id": "3d1e8381-ca1b-45b0-a7d1-5c5f05b46781",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "K-2     791\n",
+       "3-5     773\n",
+       "6-8     469\n",
+       "9-12    464\n",
+       "Name: Grade\\nBand, dtype: int64"
+      ]
+     },
+     "execution_count": 239,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df2['Grade\\nBand'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 240,
+   "id": "c9f7c557-705b-4a4d-b0a2-47391c6a9b33",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "03M859    4\n",
+       "06M348    4\n",
+       "01M539    4\n",
+       "31R080    4\n",
+       "24Q049    3\n",
+       "         ..\n",
+       "28Q358    1\n",
+       "29Q059    1\n",
+       "29Q109    1\n",
+       "29Q192    1\n",
+       "31R068    1\n",
+       "Name: DBN, Length: 1511, dtype: int64"
+      ]
+     },
+     "execution_count": 240,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df1['DBN'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 241,
+   "id": "b5631b67-4004-4e6b-af1e-3d3b84a37c75",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "KeyError",
+     "evalue": "'DBN October 2019'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "\u001b[0;32m/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pandas/core/indexes/base.py\u001b[0m in \u001b[0;36mget_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3360\u001b[0m             \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3361\u001b[0;31m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_engine\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcasted_key\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3362\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mKeyError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pandas/_libs/index.pyx\u001b[0m in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32m/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pandas/_libs/index.pyx\u001b[0m in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mpandas/_libs/hashtable_class_helper.pxi\u001b[0m in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mpandas/_libs/hashtable_class_helper.pxi\u001b[0m in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;31mKeyError\u001b[0m: 'DBN October 2019'",
+      "\nThe above exception was the direct cause of the following exception:\n",
+      "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "\u001b[0;32m/var/folders/xt/c8sk9skd58z3dc30bbmw0c2w0000gn/T/ipykernel_13561/843473682.py\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mdf2\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'DBN October 2019'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mvalue_counts\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;32m/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pandas/core/frame.py\u001b[0m in \u001b[0;36m__getitem__\u001b[0;34m(self, key)\u001b[0m\n\u001b[1;32m   3453\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcolumns\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mnlevels\u001b[0m \u001b[0;34m>\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3454\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_getitem_multilevel\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3455\u001b[0;31m             \u001b[0mindexer\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcolumns\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3456\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mis_integer\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mindexer\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3457\u001b[0m                 \u001b[0mindexer\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0mindexer\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pandas/core/indexes/base.py\u001b[0m in \u001b[0;36mget_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3361\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_engine\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcasted_key\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3362\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mKeyError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3363\u001b[0;31m                 \u001b[0;32mraise\u001b[0m \u001b[0mKeyError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3364\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3365\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mis_scalar\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0misna\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mhasnans\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mKeyError\u001b[0m: 'DBN October 2019'"
+     ]
+    }
+   ],
+   "source": [
+    "df2['DBN October 2019'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 242,
+   "id": "6c60d343-2f39-4865-89d5-5fa80de761d4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array(['Obs', 'DBN October 2019', 'Grade\\nBand',\n",
+       "       'Number\\nof White\\nStudents',\n",
+       "       'Number\\nof White\\nStudents\\nwho took CS', '% White Students',\n",
+       "       'Participation\\nRate of White\\nStudents \\n(Composition Index)',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare White\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof White\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nWhite\\nStudents',\n",
+       "       'Number\\nof Non White\\nStudents\\nwho Took CS',\n",
+       "       '% Non-White Students',\n",
+       "       'Proportion\\nof CS Students\\nwho are\\nNon White\\n(Risk Index)',\n",
+       "       'Participation\\nRate of Non-White\\nStudents \\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non White\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof\\nAsian\\nStudents', 'Number\\nof Asian CS\\nStudents',\n",
+       "       '% Asian Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Asian\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nAsian\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Asian\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nAsian\\nStudents',\n",
+       "       'Number\\nof Non\\nAsian CS\\nStudents', '% Non-Asian Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Not Asian\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nNon-Asian\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non Asian\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof\\nOther\\nStudents',\n",
+       "       'Number\\nof CS\\nTaking\\nOther\\nStudents', '% Other Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Other\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nOther\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Other\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nOther\\nStudents',\n",
+       "       'Number\\nof CS\\nTaking\\nNon-Other\\nStudents',\n",
+       "       '% Non-Other Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Not Other\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nNon-Other\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non Other\\nStudents\\n(Relative Risk Ratio)'],\n",
+       "      dtype=object)"
+      ]
+     },
+     "execution_count": 242,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df2 = pd.read_excel(filepath, sheet_name = '4ALL_METRIC_SCHOOL_REPORTS_SECO')\n",
+    "df2.columns.values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 243,
+   "id": "31aba8df-047d-4eb0-86a0-ac77c68ad4e9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df2.rename(columns={\"DBN October 2019\":\"DBN\"}, inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 244,
+   "id": "a39031bb-5fe6-4253-9af2-83ea6ccbcf3c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "mastersheet=df1.merge(df2, on=['DBN','Obs','Grade\\nBand'], how='left')\n",
+    "write_path = '/Users/thejapamarthy/Downloads/4ALL_METRIC_SCHOOL_REPORTS_2020_master.xlsx'\n",
+    "mastersheet.to_excel(write_path, sheet_name='Mastersheet', index = False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "563bedb0-d3d6-469f-a99a-0a7ce4542d7b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 245,
+   "id": "16143556-7877-4a51-9183-7cd821b4a869",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2497"
+      ]
+     },
+     "execution_count": 245,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "len(mastersheet)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 246,
+   "id": "5a1167ca-1c96-4fa7-b324-7e315a8fe3dc",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "03M859    4\n",
+       "06M348    4\n",
+       "01M539    4\n",
+       "31R080    4\n",
+       "24Q049    3\n",
+       "         ..\n",
+       "28Q358    1\n",
+       "29Q059    1\n",
+       "29Q109    1\n",
+       "29Q192    1\n",
+       "31R068    1\n",
+       "Name: DBN, Length: 1511, dtype: int64"
+      ]
+     },
+     "execution_count": 246,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mastersheet['DBN'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 247,
+   "id": "a66ebb0c-d5e6-4951-8709-cda1db08b990",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "K-2     791\n",
+       "3-5     773\n",
+       "6-8     469\n",
+       "9-12    464\n",
+       "Name: Grade\\nBand, dtype: int64"
+      ]
+     },
+     "execution_count": 247,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mastersheet['Grade\\nBand'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 248,
+   "id": "4bbc8250-39da-4811-8479-34ab55e6098e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['Obs', 'DBN', 'Grade\\nBand', 'Mobility\\nRate', 'Saturation\\nSubscore',\n",
+       "       'Equity\\nSubscore', 'Overall\\nScore', 'Total\\nNumber\\nof\\nStudents',\n",
+       "       'Total\\nNumber\\nof CS\\nStudents', '% Total Students in CS',\n",
+       "       'Number\\nof\\nFemale\\nStudents', 'Number of Female Students Who Took CS',\n",
+       "       '% Female Students',\n",
+       "       'Participation\\nRate of\\nFemale\\nStudents\\n(Composition Index)',\n",
+       "       'Proportion of School\\nthat is\\nFemale\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Female\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof Male\\nStudents', 'Number\\nof Male\\nStudents\\nWho\\nTook CS',\n",
+       "       '% Male Students',\n",
+       "       'Proportion\\nof School\\nthat is Male\\n(Composition Index)',\n",
+       "       'Participation\\nRate of Male\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Male\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nBlack\\nStudents',\n",
+       "       'Number\\nof Black\\nStudents who\\ntook CS', '% Black Students',\n",
+       "       'Proportion\\nof Students\\nwho are\\nBlack\\n(Composition)',\n",
+       "       'Participation\\nRate of\\nBlack\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Black\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nNon-Black\\nStudents',\n",
+       "       'Number\\nof\\nNon-Black\\nStudents\\nwho took\\nCS', '% Non-Black Students',\n",
+       "       'Proportion\\nof Students\\nwho are not\\nBlack\\n(Composition)',\n",
+       "       'Participation\\nRate of\\nNon-Black\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Non-Black\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number\\nof\\nLatinx\\nStudents',\n",
+       "       'Number\\nof Latinx\\nStudents\\nwho took CS', '% Latinx\\nStudents',\n",
+       "       'Proportion\\nof Students\\nwho Latinx\\n(Composition Index)',\n",
+       "       'Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index)',\n",
+       "       'Number of\\nNon-Latinx\\nStudents',\n",
+       "       'Number of\\nNon-Latinx\\nStudents\\nwho took\\nCS',\n",
+       "       '% Non-Latinx\\nStudents',\n",
+       "       'Proportion\\nof Students who are Non-Latinx\\n(Composition Index)',\n",
+       "       'Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index).1',\n",
+       "       'Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index).1',\n",
+       "       'Number\\nof White\\nStudents', 'Number\\nof White\\nStudents\\nwho took CS',\n",
+       "       '% White Students',\n",
+       "       'Participation\\nRate of White\\nStudents \\n(Composition Index)',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare White\\n(Risk Index)',\n",
+       "       'Relative\\nParticipation\\nof White\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nWhite\\nStudents',\n",
+       "       'Number\\nof Non White\\nStudents\\nwho Took CS', '% Non-White Students',\n",
+       "       'Proportion\\nof CS Students\\nwho are\\nNon White\\n(Risk Index)',\n",
+       "       'Participation\\nRate of Non-White\\nStudents \\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non White\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof\\nAsian\\nStudents', 'Number\\nof Asian CS\\nStudents',\n",
+       "       '% Asian Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Asian\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nAsian\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Asian\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nAsian\\nStudents', 'Number\\nof Non\\nAsian CS\\nStudents',\n",
+       "       '% Non-Asian Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Not Asian\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nNon-Asian\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non Asian\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof\\nOther\\nStudents', 'Number\\nof CS\\nTaking\\nOther\\nStudents',\n",
+       "       '% Other Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Other\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nOther\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Other\\nStudents\\n(Relative Risk Ratio)',\n",
+       "       'Number\\nof Non\\nOther\\nStudents',\n",
+       "       'Number\\nof CS\\nTaking\\nNon-Other\\nStudents', '% Non-Other Students',\n",
+       "       'Proportion\\nof CS\\nStudents who\\nare Not Other\\n(Risk Index)',\n",
+       "       'Participation\\nRate of\\nNon-Other\\nStudents\\n(Composition Index)',\n",
+       "       'Relative\\nParticipation\\nof Non Other\\nStudents\\n(Relative Risk Ratio)'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 248,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mastersheet.columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 249,
+   "id": "4e4b0fd0-08e4-487b-8df7-319c25c3466a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<pandas.core.groupby.generic.DataFrameGroupBy object at 0x7fd4ea6a8820>"
+      ]
+     },
+     "execution_count": 249,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "grouped_df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 250,
+   "id": "00114c41-4481-4bb4-8e50-778e002bfeff",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "output_path = '/Users/thejapamarthy/Desktop/school_data/'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 280,
+   "id": "461aae42-2741-4282-b481-bf28daabe7ac",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Obs</th>\n",
+       "      <th>DBN</th>\n",
+       "      <th>Grade\\nBand</th>\n",
+       "      <th>Mobility\\nRate</th>\n",
+       "      <th>Saturation\\nSubscore</th>\n",
+       "      <th>Equity\\nSubscore</th>\n",
+       "      <th>Overall\\nScore</th>\n",
+       "      <th>Total\\nNumber\\nof\\nStudents</th>\n",
+       "      <th>Total\\nNumber\\nof CS\\nStudents</th>\n",
+       "      <th>% Total Students in CS</th>\n",
+       "      <th>...</th>\n",
+       "      <th>% Other Students</th>\n",
+       "      <th>Proportion\\nof CS\\nStudents who\\nare Other\\n(Risk Index)</th>\n",
+       "      <th>Participation\\nRate of\\nOther\\nStudents\\n(Composition Index)</th>\n",
+       "      <th>Relative\\nParticipation\\nof Other\\nStudents\\n(Relative Risk Ratio)</th>\n",
+       "      <th>Number\\nof Non\\nOther\\nStudents</th>\n",
+       "      <th>Number\\nof CS\\nTaking\\nNon-Other\\nStudents</th>\n",
+       "      <th>% Non-Other Students</th>\n",
+       "      <th>Proportion\\nof CS\\nStudents who\\nare Not Other\\n(Risk Index)</th>\n",
+       "      <th>Participation\\nRate of\\nNon-Other\\nStudents\\n(Composition Index)</th>\n",
+       "      <th>Relative\\nParticipation\\nof Non Other\\nStudents\\n(Relative Risk Ratio)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>01M015</td>\n",
+       "      <td>3-5</td>\n",
+       "      <td>21.053</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>19</td>\n",
+       "      <td>19</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.000</td>\n",
+       "      <td>.</td>\n",
+       "      <td>0</td>\n",
+       "      <td>.</td>\n",
+       "      <td>19</td>\n",
+       "      <td>19</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>1</td>\n",
+       "      <td>.</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2</td>\n",
+       "      <td>01M019</td>\n",
+       "      <td>3-5</td>\n",
+       "      <td>14.286</td>\n",
+       "      <td>Progressing</td>\n",
+       "      <td>Progressing</td>\n",
+       "      <td>Progressing</td>\n",
+       "      <td>35</td>\n",
+       "      <td>15</td>\n",
+       "      <td>0.429</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.029</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.066667</td>\n",
+       "      <td>2.428571</td>\n",
+       "      <td>34</td>\n",
+       "      <td>14</td>\n",
+       "      <td>0.971</td>\n",
+       "      <td>0.412</td>\n",
+       "      <td>0.93333</td>\n",
+       "      <td>0.41176</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>3</td>\n",
+       "      <td>01M020</td>\n",
+       "      <td>3-5</td>\n",
+       "      <td>17.500</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>Achieving</td>\n",
+       "      <td>80</td>\n",
+       "      <td>80</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.062</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.0625</td>\n",
+       "      <td>1</td>\n",
+       "      <td>75</td>\n",
+       "      <td>75</td>\n",
+       "      <td>0.938</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>0.9375</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>4</td>\n",
+       "      <td>01M034</td>\n",
+       "      <td>3-5</td>\n",
+       "      <td>18.605</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>43</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0.000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.000</td>\n",
+       "      <td>.</td>\n",
+       "      <td>.</td>\n",
+       "      <td>.</td>\n",
+       "      <td>43</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1.000</td>\n",
+       "      <td>0.000</td>\n",
+       "      <td>.</td>\n",
+       "      <td>.</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>01M063</td>\n",
+       "      <td>3-5</td>\n",
+       "      <td>34.483</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>Not\\nOffering</td>\n",
+       "      <td>29</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.034</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.034</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>.</td>\n",
+       "      <td>28</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0.966</td>\n",
+       "      <td>0.000</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 82 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Obs     DBN Grade\\nBand  Mobility\\nRate Saturation\\nSubscore  \\\n",
+       "0    1  01M015         3-5          21.053            Achieving   \n",
+       "1    2  01M019         3-5          14.286          Progressing   \n",
+       "2    3  01M020         3-5          17.500            Achieving   \n",
+       "3    4  01M034         3-5          18.605        Not\\nOffering   \n",
+       "4    5  01M063         3-5          34.483        Not\\nOffering   \n",
+       "\n",
+       "  Equity\\nSubscore Overall\\nScore  Total\\nNumber\\nof\\nStudents  \\\n",
+       "0        Achieving      Achieving                           19   \n",
+       "1      Progressing    Progressing                           35   \n",
+       "2        Achieving      Achieving                           80   \n",
+       "3    Not\\nOffering  Not\\nOffering                           43   \n",
+       "4    Not\\nOffering  Not\\nOffering                           29   \n",
+       "\n",
+       "   Total\\nNumber\\nof CS\\nStudents  % Total Students in CS  ...  \\\n",
+       "0                              19                   1.000  ...   \n",
+       "1                              15                   0.429  ...   \n",
+       "2                              80                   1.000  ...   \n",
+       "3                               0                   0.000  ...   \n",
+       "4                               1                   0.034  ...   \n",
+       "\n",
+       "   % Other Students  Proportion\\nof CS\\nStudents who\\nare Other\\n(Risk Index)  \\\n",
+       "0             0.000                                                  .          \n",
+       "1             0.029                                                  1          \n",
+       "2             0.062                                                  1          \n",
+       "3             0.000                                                  .          \n",
+       "4             0.034                                                  1          \n",
+       "\n",
+       "   Participation\\nRate of\\nOther\\nStudents\\n(Composition Index)  \\\n",
+       "0                                                  0              \n",
+       "1                                           0.066667              \n",
+       "2                                             0.0625              \n",
+       "3                                                  .              \n",
+       "4                                                  1              \n",
+       "\n",
+       "  Relative\\nParticipation\\nof Other\\nStudents\\n(Relative Risk Ratio)  \\\n",
+       "0                                                  .                   \n",
+       "1                                           2.428571                   \n",
+       "2                                                  1                   \n",
+       "3                                                  .                   \n",
+       "4                                                  .                   \n",
+       "\n",
+       "  Number\\nof Non\\nOther\\nStudents Number\\nof CS\\nTaking\\nNon-Other\\nStudents  \\\n",
+       "0                              19                                         19   \n",
+       "1                              34                                         14   \n",
+       "2                              75                                         75   \n",
+       "3                              43                                          0   \n",
+       "4                              28                                          0   \n",
+       "\n",
+       "   % Non-Other Students  \\\n",
+       "0                 1.000   \n",
+       "1                 0.971   \n",
+       "2                 0.938   \n",
+       "3                 1.000   \n",
+       "4                 0.966   \n",
+       "\n",
+       "   Proportion\\nof CS\\nStudents who\\nare Not Other\\n(Risk Index)  \\\n",
+       "0                                              1.000              \n",
+       "1                                              0.412              \n",
+       "2                                              1.000              \n",
+       "3                                              0.000              \n",
+       "4                                              0.000              \n",
+       "\n",
+       "   Participation\\nRate of\\nNon-Other\\nStudents\\n(Composition Index)  \\\n",
+       "0                                                  1                  \n",
+       "1                                            0.93333                  \n",
+       "2                                             0.9375                  \n",
+       "3                                                  .                  \n",
+       "4                                                  0                  \n",
+       "\n",
+       "  Relative\\nParticipation\\nof Non Other\\nStudents\\n(Relative Risk Ratio)  \n",
+       "0                                                  .                      \n",
+       "1                                            0.41176                      \n",
+       "2                                                  1                      \n",
+       "3                                                  .                      \n",
+       "4                                                  0                      \n",
+       "\n",
+       "[5 rows x 82 columns]"
+      ]
+     },
+     "execution_count": 280,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mastersheet = pd.read_excel(write_path, sheet_name = 'Mastersheet')\n",
+    "mastersheet = mastersheet.round(3)\n",
+    "mastersheet.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 287,
+   "id": "bd801eee-7c22-41cf-b74a-bea888ac3091",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for code in schoolcodes[:]:\n",
+    "    \n",
+    "    writer = pd.ExcelWriter(output_path+f'School_{code}.xlsx', engine='xlsxwriter')\n",
+    "    workbook=writer.book\n",
+    "    wrap_format = workbook.add_format({'text_wrap': True})\n",
+    "    gray_format = workbook.add_format({'bg_color':'#d9d9d9'})\n",
+    "    green_format = workbook.add_format({'bg_color':'#ccffe6'})\n",
+    "    blue_format = workbook.add_format({'bg_color':'#cce6ff'})\n",
+    "    orange_format = workbook.add_format({'bg_color':'#ffddcc'})\n",
+    "    cell_format = workbook.add_format({'bold': True})\n",
+    "    twformat = workbook.add_format({'bold': True, 'text_wrap': True})\n",
+    "    border_format = workbook.add_format({'border':3})\n",
+    "    text_format = workbook.add_format()\n",
+    "    text_format.set_center_across()\n",
+    "    num_format = workbook.add_format()\n",
+    "    num_format.set_num_format('0.000')\n",
+    "    curr_school_df = mastersheet[mastersheet['DBN']==code]\n",
+    "\n",
+    "    \n",
+    "    cnt = 0\n",
+    "    index_df = pd.DataFrame()\n",
+    "    Saturation = {\n",
+    "        'K-2':[curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Saturation\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Saturation\\nSubscore']) >= 1 else ''],\n",
+    "        '3-5':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '3-5']['Saturation\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '3-5']['Saturation\\nSubscore']) >= 1 else ''],\n",
+    "        '6-8':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Saturation\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Saturation\\nSubscore']) >= 1 else ''],\n",
+    "        '9-12':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '9-12']['Saturation\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '9-12']['Saturation\\nSubscore']) >= 1 else ''],\n",
+    "    }\n",
+    "    Saturation = pd.DataFrame(Saturation,index=['Saturation'])\n",
+    "    index_df = index_df.append(Saturation)\n",
+    "    \n",
+    "    Equity = {\n",
+    "        'K-2':[curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Equity\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Equity\\nSubscore']) >= 1 else ''],\n",
+    "        '3-5':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '3-5']['Equity\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '3-5']['Equity\\nSubscore']) >= 1 else ''],\n",
+    "        '6-8':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Equity\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Equity\\nSubscore']) >= 1 else ''],\n",
+    "        '9-12':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '9-12']['Equity\\nSubscore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] == '9-12']['Equity\\nSubscore']) >= 1 else ''],\n",
+    "    }\n",
+    "    Equity = pd.DataFrame(Equity,index=['Equity'])\n",
+    "    index_df = index_df.append(Equity)\n",
+    "    \n",
+    "    Overall = {\n",
+    "        'K-2':[curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Overall\\nScore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  'K-2']['Overall\\nScore']) >= 1 else ''],\n",
+    "        '3-5':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '3-5']['Overall\\nScore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '3.5']['Overall\\nScore']) >= 1 else '' ],\n",
+    "        '6-8':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Overall\\nScore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '6-8']['Overall\\nScore']) >= 1 else ''],\n",
+    "        '9-12':[curr_school_df[curr_school_df['Grade\\nBand'] ==  '9-12']['Overall\\nScore'].iloc[0] if len(curr_school_df[curr_school_df['Grade\\nBand'] ==  '9-12']['Overall\\nScore']) >= 1 else ''],\n",
+    "    }\n",
+    "    Overall = pd.DataFrame(Overall,index=['Overall'])\n",
+    "    index_df = index_df.append(Overall)\n",
+    "    \n",
+    "    index_df.to_excel(writer,sheet_name='Report',startrow=2 , startcol=0)   \n",
+    "    worksheet = writer.sheets['Report'] \n",
+    "    \n",
+    "    for band in curr_school_df['Grade\\nBand'].unique():\n",
+    "        curr_school_cur_band_df = curr_school_df[curr_school_df['Grade\\nBand'] ==  band]\n",
+    "        stats_df = pd.DataFrame()\n",
+    "        total_student_cnt = curr_school_cur_band_df['Total\\nNumber\\nof\\nStudents'].iloc[0]\n",
+    "        Total = {\n",
+    "            '#Students in CS':[curr_school_cur_band_df['Total\\nNumber\\nof CS\\nStudents'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Total\\nNumber\\nof\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Total\\nNumber\\nof\\nStudents'].sum()*100/total_student_cnt],\n",
+    "\n",
+    "        }\n",
+    "        Total = pd.DataFrame(Total,index=['Total'])\n",
+    "        stats_df = stats_df.append(Total)\n",
+    "\n",
+    "        Female = {\n",
+    "            '#Students in CS':[curr_school_cur_band_df['Number of Female Students Who Took CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nFemale\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nFemale\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of\\nFemale\\nStudents\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion of School\\nthat is\\nFemale\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Female\\nStudents\\n(Relative Risk Index)'].iloc[0]],\n",
+    "\n",
+    "        }\n",
+    "        Female = pd.DataFrame(Female,index=['Female'])\n",
+    "        stats_df = stats_df.append(Female)\n",
+    "        \n",
+    "        Male = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Male\\nStudents\\nWho\\nTook CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nBlack\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof Male\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Proportion\\nof School\\nthat is Male\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Participation\\nRate of Male\\nStudents\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Male\\nStudents\\n(Relative Risk Index)'].iloc[0]], \n",
+    "        }\n",
+    "        Male = pd.DataFrame(Male,index=['Male'])\n",
+    "        stats_df = stats_df.append(Male)\n",
+    "        \n",
+    "        Black  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Black\\nStudents who\\ntook CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nBlack\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nBlack\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Proportion\\nof Students\\nwho are\\nBlack\\n(Composition)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Participation\\nRate of\\nBlack\\nStudents\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Black\\nStudents\\n(Relative Risk Index)'].iloc[0]], \n",
+    "        }\n",
+    "        Black = pd.DataFrame(Black,index=['Black'])\n",
+    "        stats_df = stats_df.append(Black)\n",
+    "        \n",
+    "        Not_Black  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof\\nNon-Black\\nStudents\\nwho took\\nCS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nLatinx\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nNon-Black\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Proportion\\nof Students\\nwho are not\\nBlack\\n(Composition)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Participation\\nRate of\\nNon-Black\\nStudents\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Non-Black\\nStudents\\n(Relative Risk Index)'].iloc[0]], \n",
+    "        }\n",
+    "        Not_Black = pd.DataFrame(Not_Black,index=['Not Black'])\n",
+    "        stats_df = stats_df.append(Not_Black)\n",
+    "        \n",
+    "        Latinx  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Latinx\\nStudents\\nwho took CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nLatinx\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nLatinx\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Proportion\\nof Students who are Non-Latinx\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index)'].iloc[0]], \n",
+    "        }\n",
+    "        Latinx = pd.DataFrame(Latinx,index=['Latinx'])\n",
+    "        stats_df = stats_df.append(Latinx)\n",
+    "        \n",
+    "        Not_Latinx  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number of\\nNon-Latinx\\nStudents\\nwho took\\nCS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nLatinx\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nLatinx\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Proportion\\nof Students who are Non-Latinx\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Participation\\nRate of\\nLatinx\\nStudents\\n(Risk Index).1'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Latinx\\nStudents\\n(Relative Risk Index).1'].iloc[0]], \n",
+    "        }\n",
+    "        Not_Latinx = pd.DataFrame( Not_Latinx,index=['Not Latinx'])\n",
+    "        stats_df = stats_df.append( Not_Latinx)\n",
+    "        White  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof White\\nStudents\\nwho took CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof White\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof White\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of White\\nStudents \\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS\\nStudents who\\nare White\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof White\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        White = pd.DataFrame(White,index=['White'])\n",
+    "        stats_df = stats_df.append(White)            \n",
+    "        \n",
+    "        Not_White  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Non White\\nStudents\\nwho Took CS'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof Non\\nWhite\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof Non\\nWhite\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of Non-White\\nStudents \\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS Students\\nwho are\\nNon White\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Non White\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        Not_White = pd.DataFrame(Not_White,index=['Not White'])\n",
+    "        stats_df = stats_df.append(Not_White)\n",
+    "        \n",
+    "        Asian  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Asian CS\\nStudents'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nAsian\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nAsian\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of\\nAsian\\nStudents\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS\\nStudents who\\nare Asian\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Asian\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        Asian = pd.DataFrame(Asian,index=['Asian'])\n",
+    "        stats_df = stats_df.append(Asian) \n",
+    "        \n",
+    "        Not_Asian  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof Non\\nAsian CS\\nStudents'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof Non\\nAsian\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof Non\\nAsian\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of\\nNon-Asian\\nStudents\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS\\nStudents who\\nare Asian\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Non Asian\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        Not_Asian = pd.DataFrame(Not_Asian,index=['Not Asian'])\n",
+    "        stats_df = stats_df.append(Not_Asian) \n",
+    "        \n",
+    "        Other  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof CS\\nTaking\\nOther\\nStudents'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof\\nOther\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof\\nOther\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of\\nOther\\nStudents\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS\\nStudents who\\nare Other\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Other\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        Other = pd.DataFrame(Other,index=['Other'])\n",
+    "        stats_df = stats_df.append(Other) \n",
+    "        \n",
+    "        Not_Other  = {\n",
+    "           '#Students in CS':[curr_school_cur_band_df['Number\\nof CS\\nTaking\\nNon-Other\\nStudents'].iloc[0]],\n",
+    "            '#Total Students':[curr_school_cur_band_df['Number\\nof Non\\nOther\\nStudents'].iloc[0]],\n",
+    "            '% Students':[curr_school_cur_band_df['Number\\nof Non\\nOther\\nStudents'].sum()*100/total_student_cnt],\n",
+    "            'Composition Index':[curr_school_cur_band_df['Participation\\nRate of\\nNon-Other\\nStudents\\n(Composition Index)'].iloc[0]],\n",
+    "            'Risk Index':[curr_school_cur_band_df['Proportion\\nof CS\\nStudents who\\nare Not Other\\n(Risk Index)'].iloc[0]],\n",
+    "            'Relative Risk Index':[curr_school_cur_band_df['Relative\\nParticipation\\nof Non Other\\nStudents\\n(Relative Risk Ratio)'].iloc[0]], \n",
+    "        }\n",
+    "        Not_Other = pd.DataFrame(Not_Other ,index=['Not Other'])\n",
+    "        stats_df = stats_df.append(Not_Other) \n",
+    "        text2 = f'Computer Science Education (SY19 to SY20) Band: {band}'\n",
+    "        worksheet.write(8+cnt, 3, text2, text_format)\n",
+    "#         worksheet.set_row(8+cnt,20,green_format)\n",
+    "        worksheet.conditional_format(f'A{8+cnt+1}:G{8+cnt+1}', {'type': 'no_errors',\n",
+    "                                        'format': green_format \n",
+    "                                        })\n",
+    "        worksheet.conditional_format(f'A{8+cnt+1}:G{8+cnt+1}', {'type': 'no_errors',\n",
+    "                                       'format': cell_format \n",
+    "                                        })\n",
+    "        \n",
+    "#         stats_df.style.set_table_styles([dict(selector=\"th\",props=[('max-width', '20px')])])\n",
+    "        stats_df.to_excel(writer,sheet_name='Report',startrow=8+cnt+1 , startcol=0) \n",
+    "        worksheet.conditional_format(f'A{8+cnt+2}:G{8+cnt+2}', {'type': 'no_errors',\n",
+    "                                        'format': blue_format\n",
+    "                                        })\n",
+    "        worksheet.conditional_format(f'A{2}:E{2}', {'type': 'no_errors',\n",
+    "                                        'format': blue_format\n",
+    "                                        })\n",
+    "        worksheet.conditional_format(f'A{2}:G{77}', {'type': 'no_errors',\n",
+    "                                        'format': text_format, 'multi_range': 'A2:E2 A9:G10 A25:G26 A41:G42' \n",
+    "                                        })\n",
+    "        worksheet.conditional_format(f'A{8+cnt+2}:G{8+cnt+2}', {'type': 'no_errors',\n",
+    "                                        'format': cell_format, 'multi_range': 'A1:B1 C2:D2'\n",
+    "                                        })\n",
+    "        worksheet.conditional_format(f'A{8+cnt+2}:G{8+cnt+2}', {'type': 'no_errors',\n",
+    "                                        'format': num_format, 'multi_range': 'D11:G23 D27:G39 D43:G55 D58:G70'\n",
+    "                                        })\n",
+    "        \n",
+    "       # worksheet.conditional_format(f'A{3+cnt+2}:G{8+cnt+2}', {'type': 'no_errors',\n",
+    "                                        #'format': border_format\n",
+    "                                       # })\n",
+    "        worksheet.conditional_format(f'A{3}:G{55}', {'type': 'no_errors',\n",
+    "                                        'format': border_format, 'multi_range': 'A3:E6 A9:G70'\n",
+    "                                         })    \n",
+    "        worksheet.conditional_format(f'A{3}:E{3}', {'type': 'no_errors',\n",
+    "                                        'format': border_format, \n",
+    "                                         })     \n",
+    "        cnt += 16\n",
+    "        \n",
+    "    text1 = f'SCHOOLCODE: {code}'\n",
+    "    worksheet.write(0, 0, text1)\n",
+    "    text3 = 'CS4ALL Ratings'\n",
+    "    worksheet.set_column('B:G', 16)\n",
+    "    worksheet.write(1,3, text3)\n",
+    "    \n",
+    "    \n",
+    "    \n",
+    "    # Setting the format but not setting the column width.\n",
+    "#     worksheet.set_column(1,20, None, wrap_format)\n",
+    "    #header_format = worksheet.add_format({'bold': True,'text_wrap': True,'valign':'top','fg_color': '#D7E4BC' ,'border': 1})\n",
+    "    #for col_num, value in enumerate(curr_school_df.columns.values):\n",
+    "        #worksheet.write(0, col_num + 1, value, header_format)\n",
+    "    \n",
+    "    writer.save()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 283,
+   "id": "c070769d-1642-4ae9-bebb-4333e4f14378",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.4.4\n"
+     ]
+    }
+   ],
+   "source": [
+    "import xlsxwriter; \n",
+    "print(xlsxwriter.__version__)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 69,
+   "id": "3af27770-e529-4e7a-b673-c0d5bb6eafbc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# df1.groupby(by='schoolcode').agg({'mean': np/})\n",
+    "\n",
+    "# df1.sort_values(by='schoolcode')\n",
+    "\n",
+    "#df1.to_xlsc\n",
+    "\n",
+    "#subset_df = df1[['sdf','sdfsd','sdfsdf']]\n",
+    "\n",
+    "#arr = subset_df['schooldcode'].unique().values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "42819c55-7131-48ea-9733-7857d72a8504",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#def "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b64b9f92-02d5-4e9e-bee9-87b9e59a78e1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#for i in range(len(arr)):\n",
+    "    #current_school = arr[i]\n",
+    "    \n",
+    "    ## processing\n",
+    "    #temp_df = df1[df1['schoollcode']==current_school]\n",
+    "    #temp_df.style.apply(hihglight)\n",
+    "    #temp_df.to_xlsx(f'/User/thejapamarthy/Downloads/schools/{current_school}_school.xlsx')"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
